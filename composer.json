@@ -1,0 +1,22 @@
+{
+    "name": "debva/laravel-datatables",
+    "description": "Laravel Datatables",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Debva\\Datatables\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wildhandb",
+            "email": "wildhan.db@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
