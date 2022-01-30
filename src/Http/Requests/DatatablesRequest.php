@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Debva\Datatables\Http;
+namespace Debva\Datatables\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Request extends FormRequest
+class DatatablesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

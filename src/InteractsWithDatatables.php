@@ -3,14 +3,15 @@
 namespace Debva\Datatables;
 
 use Illuminate\Database\Eloquent\Model;
-use Debva\Datatables\Http\{Request, Response};
+use Debva\Datatables\Http\Requests\DatatablesRequest;
+use Debva\Datatables\Http\Responses\DatatablesResponse;
 use Debva\Datatables\Classes\{Filtering, Searching, Sorting};
 
 trait InteractsWithDatatables
 {
     use Filtering, Searching, Sorting;
 
-    abstract protected function setQuery();
+    abstract protected function setQuery(): object;
 
     abstract protected function setColumns(): array;
 
@@ -24,10 +25,10 @@ trait InteractsWithDatatables
 
     public function getColumns()
     {
-        return app(Response::class)->columns($this->setColumns());
+        return app(DatatablesResponse::class)->columns($this->setColumns());
     }
 
-    public function getDatatables(Request $request)
+    public function getDatatables(DatatablesRequest $request)
     {
         $queryBuilder = $this->setupQueryBuilder($this->setQuery());
         $columns = $this->setColumns();
@@ -42,6 +43,6 @@ trait InteractsWithDatatables
             ->offset($perPage * ($request->getPage() - 1))
             ->get();
 
-        return app(Response::class)->datatables($request, $rows, $total);
+        return app(DatatablesResponse::class)->datatables($request, $columns, $rows, $total);
     }
 }

@@ -30,7 +30,7 @@ class Column
     {
         $this->type = $type;
         $this->name = $this->placeholder = $name;
-        $this->attribute = $attribute ?? str_replace([' ', '.'], '', strtolower($name));
+        $this->attribute = $attribute ?? str_replace([' ', '.'], '_', strtolower($name));
         $this->connection = \DB::connection()->getDriverName();
     }
 
@@ -62,5 +62,74 @@ class Column
     {
         $this->whereClauseAttribute = $whereClauseAttribute;
         return $this;
+    }
+
+    public function getAttribute()
+    {
+        return $this->attribute;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    public function isFilterable()
+    {
+        return $this->filterable;
+    }
+
+    public function isSearchable()
+    {
+        return $this->searchable;
+    }
+
+    public function isSortable()
+    {
+        return $this->sortable;
+    }
+
+    public function getWhereClauseAttribute()
+    {
+        return $this->whereClauseAttribute ?? $this->attribute;
+    }
+
+    public function getValue($row, $attribute = null)
+    {
+        $data = data_get($row, ($attribute ?? $this->attribute));
+
+        if ($this->type === 'date') {
+            $data = strftime($this->dateOutputFormat, strtotime($data));
+        }
+
+        return $data;
+    }
+
+    public function jsonSerialize()
+    {
+        $response = [
+            'key'           => $this->attribute,
+            'label'         => $this->name,
+            'type'          => $this->type,
+            'filterable'    => $this->filterable,
+            'sortable'      => $this->sortable,
+        ];
+
+        if (!in_array($this->type, ['date'])) {
+            $response = array_merge($response, [
+                'searchable'    => $this->searchable,
+            ]);
+        }
+
+        if (in_array($this->type, ['date'])) {
+            $response = array_merge($response, []);
+        }
+
+        return $response;
     }
 }

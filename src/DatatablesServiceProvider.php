@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelDatatables;
+namespace Debva\Datatables;
 
 use Illuminate\Support\ServiceProvider;
 

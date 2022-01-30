@@ -2,35 +2,38 @@
 
 namespace Debva\Datatables\Classes;
 
-use Debva\Datatables\Http\Request;
+use Debva\Datatables\Http\Requests\DatatablesRequest;
 
 trait Filtering
 {
-    public function performFiltering(Request $request, $queryBuilder)
+    abstract protected function setColumns(): array;
+
+    public function performFiltering(DatatablesRequest $request, $queryBuilder)
     {
         $columnFilters = $request->getColumnFilters();
 
-        // if ($this->canBeFiltered($column) and array_key_exists($column->getAttribute(), $columnFilters)) {
+        foreach ($this->setColumns() as $column) {
+            if ($column->isFilterable() and array_key_exists($column->getAttribute(), $columnFilters)) {
 
-        //     $filterValues = $columnFilters[$column->getAttribute()];
+                $filterValues = $columnFilters[$column->getAttribute()];
 
-        //     if (!is_array($filterValues)) {
-        //         $filterValues = [$filterValues];
-        //     }
+                if (!is_array($filterValues)) {
+                    $filterValues = [$filterValues];
+                }
 
-        //     /** @var Filterable|Column $column */
-        //     $queryBuilder = $column->filter($queryBuilder, $filterValues);
-        // }
-        // return $queryBuilder->where(function ($query) use ($values) {
-        //     foreach ($values as $value) {
-        //         $attributeName = $this->getWhereClauseAttribute();
-        //         if ($this->getType() === 'date') {
-        //             $query->orWhereDate($attributeName, $value);
-        //         } else {
-        //             $query->orWhere($attributeName, 'LIKE', "%$value%");
-        //         }
-        //     }
-        // });
+                $queryBuilder = $queryBuilder->where(function ($query) use ($filterValues, $column) {
+                    foreach ($filterValues as $value) {
+                        $attributeName = $column->getWhereClauseAttribute();
+                        if ($column->getType() === 'date') {
+                            $query->orWhereDate($attributeName, $value);
+                        } else {
+                            $query->orWhere($attributeName, 'LIKE', "%$value%");
+                        }
+                    }
+                });
+            }
+        }
+
         return $queryBuilder;
     }
 }
