@@ -3,34 +3,28 @@
 
 namespace Debva\Datatables\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class DatatablesRequest extends FormRequest
+class DatatablesRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
+    private $validator;
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function __construct(Request $request)
     {
-        return [
+        $this->validator = Validator::make($request->all(), [
             'page'          => 'integer',
             'perPage'       => 'integer',
             'columnFilters' => 'array',
-            'sort.*.field'  => 'filled',
-            'sort.*.type'   => 'filled|in:asc,desc',
-        ];
+            'sort.field'  => 'filled',
+            'sort.type'   => 'filled|in:asc,desc',
+            'q'             => 'nullable'
+        ])->validated();
+    }
+
+    private function get(string $key, $default = null)
+    {
+        return array_key_exists($key, $this->validator) ? $this->validator[$key] : $default;
     }
 
     public function getPerPage(): int
