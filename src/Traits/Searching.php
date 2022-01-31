@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Datatables\Classes;
+namespace Debva\Datatables\Traits;
 
 use Debva\Datatables\Http\Requests\DatatablesRequest;
 

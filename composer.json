@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "files": [
-            "src/Helpers.php"
+            "src/Http/Helpers.php"
         ],
         "psr-4": {
             "Debva\\Datatables\\": "src/"

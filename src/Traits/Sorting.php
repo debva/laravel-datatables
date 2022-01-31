@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Datatables\Classes;
+namespace Debva\Datatables\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Debva\Datatables\Http\Requests\DatatablesRequest;

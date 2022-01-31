@@ -2,7 +2,7 @@
 
 namespace Debva\Datatables;
 
-use Debva\Datatables\Traits\{Boolean, Date, Number, Select, Text};
+use Debva\Datatables\Columns\{Boolean, Date, Number, Select, Text};
 
 class Column
 {

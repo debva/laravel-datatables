@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Datatables\Traits;
+namespace Debva\Datatables\Columns;
 
 trait Boolean
 {
