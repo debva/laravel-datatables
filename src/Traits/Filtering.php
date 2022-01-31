@@ -6,8 +6,6 @@ use Debva\Datatables\Http\Requests\DatatablesRequest;
 
 trait Filtering
 {
-    abstract protected function setColumns(): array;
-
     public function performFiltering(DatatablesRequest $request, $queryBuilder)
     {
         $columnFilters = $request->getColumnFilters();

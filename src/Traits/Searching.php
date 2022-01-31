@@ -6,20 +6,17 @@ use Debva\Datatables\Http\Requests\DatatablesRequest;
 
 trait Searching
 {
-    abstract protected function setColumns(): array;
-
     public function performSearching(DatatablesRequest $request, $queryBuilder)
     {
-        $sq = $request->getSearchQuery();
-        if (empty($sq)) {
+        $q = $request->getSearchQuery();
+        if (empty($q)) {
             return $queryBuilder;
         }
 
-        $columns = $this->setColumns();
-        $queryBuilder->where(function ($query) use ($columns, $sq) {
-            foreach ($columns as $column) {
+        $queryBuilder->where(function ($query) use ($q) {
+            foreach ($this->setColumns() as $column) {
                 if ($column->isSearchable()) {
-                    $query->orWhere($column->getWhereClauseAttribute(), ($column->getConnection() == 'mysql' ? 'like' : 'ilike'), "%{$sq}%");
+                    $query->orWhere($column->getWhereClauseAttribute(), ($column->getConnection() == 'mysql' ? 'like' : 'ilike'), "%{$q}%");
                 }
             }
         });
