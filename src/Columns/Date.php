@@ -8,6 +8,7 @@ trait Date
 
     public static function date(...$args)
     {
+        abort_if(!static::$instance, 500, 'Double Column');
         return new static('date', ...$args);
     }
 

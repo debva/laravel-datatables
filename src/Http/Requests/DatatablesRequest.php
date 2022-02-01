@@ -16,8 +16,8 @@ class DatatablesRequest
             'page'          => 'integer',
             'perPage'       => 'integer',
             'columnFilters' => 'array',
-            'sort.field'  => 'filled',
-            'sort.type'   => 'filled|in:asc,desc',
+            'sort.field'    => 'filled',
+            'sort.type'     => 'filled|in:asc,desc',
             'q'             => 'nullable'
         ])->validated();
     }

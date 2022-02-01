@@ -6,7 +6,7 @@ use Debva\Datatables\Http\Requests\DatatablesRequest;
 
 trait Searching
 {
-    public function performSearching(DatatablesRequest $request, $queryBuilder)
+    public function performSearching(DatatablesRequest $request, $columns, $queryBuilder)
     {
         $q = $request->getSearchQuery();
         if (empty($q)) {
@@ -14,7 +14,7 @@ trait Searching
         }
 
         $queryBuilder->where(function ($query) use ($q) {
-            foreach ($this->setColumns() as $column) {
+            foreach ($columns as $column) {
                 if ($column->isSearchable()) {
                     $query->orWhere($column->getWhereClauseAttribute(), $column->getOperator(), "%{$q}%");
                 }

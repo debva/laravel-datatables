@@ -6,11 +6,11 @@ use Debva\Datatables\Http\Requests\DatatablesRequest;
 
 trait Filtering
 {
-    public function performFiltering(DatatablesRequest $request, $queryBuilder)
+    public function performFiltering(DatatablesRequest $request, $columns, $queryBuilder)
     {
         $columnFilters = $request->getColumnFilters();
 
-        foreach ($this->setColumns() as $column) {
+        foreach ($columns as $column) {
             if ($column->isFilterable() and array_key_exists($column->getAttribute(), $columnFilters)) {
 
                 $filterValues = $columnFilters[$column->getAttribute()];

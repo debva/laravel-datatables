@@ -7,7 +7,7 @@ use Debva\Datatables\Http\Requests\DatatablesRequest;
 
 trait Sorting
 {
-    public function performSorting(DatatablesRequest $request, $queryBuilder)
+    public function performSorting(DatatablesRequest $request, $columns, $queryBuilder)
     {
         $sort = $request->getSort();
         if (empty($sort)) {
@@ -22,7 +22,7 @@ trait Sorting
             $isReorder = true;
         }
 
-        foreach ($this->setColumns() as $column) {
+        foreach ($columns as $column) {
             if ($column->getAttribute() == $sortField and $column->isSortable()) {
                 if ($isReorder) {
                     $queryBuilder->reorder($column->getWhereClauseAttribute(), $sortType);

@@ -28,8 +28,11 @@ class Column
 
     private $with;
 
+    private static $instance = true;
+    
     public function __construct(string $type, string $name, ?string $attribute = null)
     {
+        self::$instance = false;
         $this->type = $type;
         $this->name = $this->placeholder = $name;
         $this->attribute = $attribute ?? str_replace([' ', '.'], '_', strtolower($name));
@@ -44,8 +47,10 @@ class Column
 
     public function searchable(?bool $searchable = true)
     {
-        $this->searchable = $searchable;
-        return $this;
+        if (!$this->getType(['date'])) {
+            $this->searchable = $searchable;
+            return $this;
+        }
     }
 
     public function sortable(?bool $sortable = true)
@@ -77,9 +82,12 @@ class Column
         return $this->attribute;
     }
 
-    public function getType()
+    public function getType($type = null)
     {
-        return $this->type;
+        if (is_array($type)) {
+            return in_array($this->type, $type);
+        }
+        return $type ? $this->type === $type : $this->type;
     }
 
     public function getConnection()
@@ -117,22 +125,22 @@ class Column
         return $this->with;
     }
 
-    public function getValue($row, $attribute = null)
+    public function getValue($row)
     {
-        if ($this->with) {
-            if ($row->{$this->with} instanceof Collection) {
+        if ($this->getWith()) {
+            if ($row->{$this->getWith()} instanceof Collection) {
                 $data = [];
-                foreach ($row->{$this->with} as $relation) {
+                foreach ($row->{$this->getWith()} as $relation) {
                     $data[] = $relation->{$this->getWhereClauseAttribute()};
                 }
             } else {
-                $data = data_get($row->{$this->with}, $this->getWhereClauseAttribute());
+                $data = data_get($row->{$this->getWith()}, $this->getWhereClauseAttribute());
             }
         } else {
-            $data = data_get($row, ($attribute ?? $this->attribute));
+            $data = data_get($row, $this->getWhereClauseAttribute());
         }
 
-        if ($this->type === 'date') {
+        if ($this->getType('date')) {
             $data = strftime($this->dateOutputFormat, strtotime($data));
         }
 
@@ -149,17 +157,13 @@ class Column
             'sortable'      => $this->sortable,
         ];
 
-        if (!in_array($this->type, ['date'])) {
+        if (!$this->getType(['date'])) {
             $response = array_merge($response, [
-                'searchable'    => $this->searchable,
+                'searchable' => $this->searchable,
             ]);
         }
 
-        if (in_array($this->type, ['date'])) {
-            $response = array_merge($response, []);
-        }
-
-        if (in_array($this->type, ['blank'])) {
+        if ($this->getType(['blank'])) {
             return $this->name;
         }
 

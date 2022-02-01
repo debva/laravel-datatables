@@ -26,9 +26,9 @@ trait Datatables
         $queryBuilder = $this->setupQueryBuilder($this->setQuery());
         $columns = $this->setColumns();
 
-        $queryBuilder = $this->performFiltering($request, $queryBuilder);
-        $queryBuilder = $this->performSearching($request, $queryBuilder);
-        $queryBuilder = $this->performSorting($request, $queryBuilder);
+        $queryBuilder = $this->performFiltering($request, $columns, $queryBuilder);
+        $queryBuilder = $this->performSearching($request, $columns, $queryBuilder);
+        $queryBuilder = $this->performSorting($request, $columns, $queryBuilder);
 
         $total = $queryBuilder->count();
         $rows = $queryBuilder

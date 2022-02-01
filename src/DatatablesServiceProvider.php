@@ -4,7 +4,7 @@ namespace Debva\Datatables;
 
 use Illuminate\Support\ServiceProvider;
 
-class LaravelDatatablesServiceProvider extends ServiceProvider
+class DatatablesServiceProvider extends ServiceProvider
 {
     public function register()
     {
