@@ -18,7 +18,7 @@ class DatatablesRequest
             'columnFilters' => 'array',
             'sort.field'    => 'filled',
             'sort.type'     => 'filled|in:asc,desc',
-            'q'             => 'nullable'
+            'q'             => 'filled'
         ])->validated();
     }
 

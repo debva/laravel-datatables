@@ -13,7 +13,7 @@ trait Searching
             return $queryBuilder;
         }
 
-        $queryBuilder->where(function ($query) use ($q) {
+        $queryBuilder->where(function ($query) use ($columns, $q) {
             foreach ($columns as $column) {
                 if ($column->isSearchable()) {
                     $query->orWhere($column->getWhereClauseAttribute(), $column->getOperator(), "%{$q}%");

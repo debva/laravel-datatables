@@ -2,11 +2,11 @@
 
 namespace Debva\Datatables;
 
-use Debva\Datatables\Columns\{Blank, Boolean, Date, Number, Select, Text};
+use Debva\Datatables\Columns\{Blank, Date, Number, Select, Text};
 
 class Column
 {
-    use Blank, Boolean, Date, Number, Select, Text;
+    use Blank, Date, Number, Select, Text;
 
     private $name;
 
@@ -28,11 +28,8 @@ class Column
 
     private $with;
 
-    private static $instance = true;
-    
     public function __construct(string $type, string $name, ?string $attribute = null)
     {
-        self::$instance = false;
         $this->type = $type;
         $this->name = $this->placeholder = $name;
         $this->attribute = $attribute ?? str_replace([' ', '.'], '_', strtolower($name));
@@ -131,13 +128,13 @@ class Column
             if ($row->{$this->getWith()} instanceof Collection) {
                 $data = [];
                 foreach ($row->{$this->getWith()} as $relation) {
-                    $data[] = $relation->{$this->getWhereClauseAttribute()};
+                    $data[] = $relation->{$this->attribute};
                 }
             } else {
-                $data = data_get($row->{$this->getWith()}, $this->getWhereClauseAttribute());
+                $data = data_get($row->{$this->getWith()}, $this->attribute);
             }
         } else {
-            $data = data_get($row, $this->getWhereClauseAttribute());
+            $data = data_get($row, $this->attribute);
         }
 
         if ($this->getType('date')) {

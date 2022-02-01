@@ -10,17 +10,21 @@ trait InteractsWithDatatablesUsingRepository
 
     protected function setQuery(): object
     {
-        if (is_object($this->repository) and method_exists($this->repository, 'setQuery')) {
+        abort_if(!isset($this->repository), 500, 'Repository Undefined');
+        $this->repository = is_object($this->repository) ? $this->repository : app($this->repository);
+        if (method_exists($this->repository, 'setQuery')) {
             return $this->repository->setQuery();
         }
-        abort(404);
+        abort(500, 'Query Undefined');
     }
 
     protected function setColumns(): array
     {
-        if (is_object($this->repository) and method_exists($this->repository, 'setColumns')) {
+        abort_if(!isset($this->repository), 500, 'Repository Undefined');
+        $this->repository = is_object($this->repository) ? $this->repository : app($this->repository);
+        if (method_exists($this->repository, 'setQuery')) {
             return $this->repository->setColumns();
         }
-        abort(404);
+        abort(500, 'Columns Undefined');
     }
 }

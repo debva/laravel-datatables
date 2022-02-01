@@ -21,7 +21,7 @@ class DatatablesResponse
         foreach ($rows as $row) {
             $values = [];
             foreach ($columns as $column) {
-                if (!in_array($column->getType(), ['blank'])) {
+                if (!$column->getType(['blank'])) {
                     $values[$column->getAttribute()] = $column->getValue($row);
                 }
             }
