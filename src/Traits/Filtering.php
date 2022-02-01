@@ -25,7 +25,7 @@ trait Filtering
                         if ($column->getType() === 'date') {
                             $query->orWhereDate($attributeName, $value);
                         } else {
-                            $query->orWhere($attributeName, 'LIKE', "%$value%");
+                            $query->orWhere($attributeName, $column->getOperator(), "%$value%");
                         }
                     }
                 });

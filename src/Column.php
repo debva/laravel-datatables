@@ -2,11 +2,11 @@
 
 namespace Debva\Datatables;
 
-use Debva\Datatables\Columns\{Boolean, Date, Number, Select, Text};
+use Debva\Datatables\Columns\{Blank, Boolean, Date, Number, Select, Text};
 
 class Column
 {
-    use Boolean, Date, Number, Select, Text;
+    use Blank, Boolean, Date, Number, Select, Text;
 
     private $name;
 
@@ -25,6 +25,8 @@ class Column
     private $placeholder;
 
     private $whereClauseAttribute;
+
+    private $with;
 
     public function __construct(string $type, string $name, ?string $attribute = null)
     {
@@ -64,6 +66,12 @@ class Column
         return $this;
     }
 
+    public function with(string $with)
+    {
+        $this->with = $with;
+        return $this;
+    }
+
     public function getAttribute()
     {
         return $this->attribute;
@@ -77,6 +85,11 @@ class Column
     public function getConnection()
     {
         return $this->connection;
+    }
+
+    public function getOperator()
+    {
+        return $this->connection === 'pgsql' ? 'ILIKE' : 'LIKE';
     }
 
     public function isFilterable()
@@ -99,9 +112,25 @@ class Column
         return $this->whereClauseAttribute ?? $this->attribute;
     }
 
+    public function getWith()
+    {
+        return $this->with;
+    }
+
     public function getValue($row, $attribute = null)
     {
-        $data = data_get($row, ($attribute ?? $this->attribute));
+        if ($this->with) {
+            if ($row->{$this->with} instanceof Collection) {
+                $data = [];
+                foreach ($row->{$this->with} as $relation) {
+                    $data[] = $relation->{$this->getWhereClauseAttribute()};
+                }
+            } else {
+                $data = data_get($row->{$this->with}, $this->getWhereClauseAttribute());
+            }
+        } else {
+            $data = data_get($row, ($attribute ?? $this->attribute));
+        }
 
         if ($this->type === 'date') {
             $data = strftime($this->dateOutputFormat, strtotime($data));
@@ -128,6 +157,10 @@ class Column
 
         if (in_array($this->type, ['date'])) {
             $response = array_merge($response, []);
+        }
+
+        if (in_array($this->type, ['blank'])) {
+            return $this->name;
         }
 
         return $response;

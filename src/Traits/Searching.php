@@ -16,7 +16,7 @@ trait Searching
         $queryBuilder->where(function ($query) use ($q) {
             foreach ($this->setColumns() as $column) {
                 if ($column->isSearchable()) {
-                    $query->orWhere($column->getWhereClauseAttribute(), ($column->getConnection() == 'mysql' ? 'like' : 'ilike'), "%{$q}%");
+                    $query->orWhere($column->getWhereClauseAttribute(), $column->getOperator(), "%{$q}%");
                 }
             }
         });
