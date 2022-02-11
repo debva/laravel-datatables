@@ -1,14 +1,14 @@
 <?php
 
-namespace Debva\Datatables\Traits;
+namespace Debva\Actions;
 
-use Debva\Datatables\Http\Requests\DatatablesRequest;
+use Debva\Http\Request;
 
-trait Searching
+class Searching
 {
-    public function performSearching(DatatablesRequest $request, $columns, $queryBuilder)
+    public static function create($queryBuilder, $columns)
     {
-        $q = $request->getSearchQuery();
+        $q = Request::getSearchQuery();
         if (empty($q)) {
             return $queryBuilder;
         }

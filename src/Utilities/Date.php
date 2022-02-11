@@ -1,16 +1,16 @@
 <?php
 
-namespace Debva\Datatables\Columns;
+namespace Debva\Utilities;
 
 trait Date
 {
     protected $dateOutputFormat = '%A, %d %B %Y %H:%m:%S';
 
-    public static function date(...$args)
-    {
-        return new static('date', ...$args);
-    }
-
+    /**
+     * @param string $format
+     * 
+     * @return $this
+     */
     public function dateOutputFormat(string $format)
     {
         $this->dateOutputFormat = $format;

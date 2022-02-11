@@ -1,14 +1,14 @@
 <?php
 
-namespace Debva\Datatables\Traits;
+namespace Debva\Actions;
 
-use Debva\Datatables\Http\Requests\DatatablesRequest;
+use Debva\Http\Request;
 
-trait Filtering
+class Filtering
 {
-    public function performFiltering(DatatablesRequest $request, $columns, $queryBuilder)
+    public static function create($queryBuilder, $columns)
     {
-        $columnFilters = $request->getColumnFilters();
+        $columnFilters = Request::getColumnFilters();
 
         foreach ($columns as $column) {
             if ($column->isFilterable() and array_key_exists($column->getAttribute(), $columnFilters)) {

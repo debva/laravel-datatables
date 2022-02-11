@@ -8,7 +8,7 @@
             "src/helpers.php"
         ],
         "psr-4": {
-            "Debva\\Datatables\\": "src/"
+            "Debva\\": "src/"
         }
     },
     "authors": [
@@ -18,12 +18,5 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Debva\\Datatables\\DatatablesServiceProvider"
-            ]
-        }
-    }
+    "require": {}
 }

@@ -1,15 +1,14 @@
 <?php
 
-namespace Debva\Datatables\Traits;
+namespace Debva\Actions;
 
-use Illuminate\Database\Eloquent\Builder;
-use Debva\Datatables\Http\Requests\DatatablesRequest;
+use Debva\Http\Request;
 
-trait Sorting
+class Sorting
 {
-    public function performSorting(DatatablesRequest $request, $columns, $queryBuilder)
+    public static function create($queryBuilder, $columns)
     {
-        $sort = $request->getSort();
+        $sort = Request::getSort();
         if (empty($sort)) {
             return $queryBuilder;
         }

@@ -1,18 +1,16 @@
 <?php
 
+namespace Debva\Http;
 
-namespace Debva\Datatables\Http\Requests;
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class DatatablesRequest
+class Request
 {
-    private $validator;
+    protected $validator;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->validator = Validator::make($request->all(), [
+        $this->validator = Validator::make($_REQUEST, [
             'page'          => 'integer',
             'perPage'       => 'integer',
             'columnFilters' => 'array',
@@ -22,38 +20,45 @@ class DatatablesRequest
         ])->validated();
     }
 
-    private function get(string $key, $default = null)
+    public static function __callStatic($method, $arguments)
+    {
+        if (startsWith($method, 'get')) {
+            return (new static)->{substr($method, 3)}(...$arguments);
+        }
+    }
+
+    protected function get(string $key, $default = null)
     {
         return array_key_exists($key, $this->validator) ? $this->validator[$key] : $default;
     }
 
-    public function getPerPage(): int
+    protected function perPage(): int
     {
         return $this->get('perPage', 10);
     }
 
-    public function getPage(): int
+    protected function page(): int
     {
         return $this->get('page', 1);
     }
 
-    public function getColumnFilters(): array
+    protected function columnFilters(): array
     {
         $columnFilters = $this->get('columnFilters', []);
         $columnFilters = collect($columnFilters)
-            ->filter(function ($value, $key) {
+            ->filter(function ($value) {
                 return !empty($value);
             })->all();
 
         return $columnFilters;
     }
 
-    public function getSort(): array
+    protected function sort(): array
     {
         return $this->get('sort', []);
     }
 
-    public function getSearchQuery(): ?string
+    protected function searchQuery(): ?string
     {
         return $this->get('q');
     }
