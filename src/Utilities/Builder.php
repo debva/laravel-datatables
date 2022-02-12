@@ -10,7 +10,7 @@ trait Builder
     protected $whereClauseAttribute;
 
     protected $with;
-    
+
     /**
      * @param string $whereClauseAttribute
      * 
@@ -56,6 +56,10 @@ trait Builder
      */
     public function getData($queryBuilder)
     {
+        if ($this->html) {
+            return call_user_func($this->html, data_get($queryBuilder, $this->attribute), $queryBuilder);
+        }
+
         if ($this->getWith()) {
             if ($queryBuilder->{$this->getWith()} instanceof \Collection) {
                 $data = [];

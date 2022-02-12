@@ -8,7 +8,7 @@ trait Group
 
     protected function group($attribute)
     {
-        $attribute = $attribute(new self);
+        $attribute = call_user_func($attribute, new self);
         if (is_array($attribute)) {
             $this->children = $attribute;
             return $this;

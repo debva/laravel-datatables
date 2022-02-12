@@ -7,6 +7,7 @@ use Debva\Utilities\{
     Connection,
     Date,
     Filterable,
+    Footer,
     Group,
     Searchable,
     Serialize,
@@ -19,6 +20,7 @@ class Column
         Connection,
         Date,
         Filterable,
+        Footer,
         Group,
         Searchable,
         Serialize,
@@ -29,6 +31,8 @@ class Column
     protected $attribute;
 
     protected $type;
+
+    protected $html;
 
     protected $columnList = [];
 
@@ -89,5 +93,16 @@ class Column
             return in_array($this->type, $type);
         }
         return $type ? $this->type === $type : $this->type;
+    }
+
+    /**
+     * @param \Closure $html
+     * 
+     * @return $this
+     */
+    public function html(\Closure $html)
+    {
+        $this->html = $html;
+        return $this;
     }
 }

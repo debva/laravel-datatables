@@ -13,6 +13,8 @@ trait Serialize
             'filterable'    => $this->filterable,
             'searchable'    => $this->searchable,
             'sortable'      => $this->sortable,
+            'html'          => $this->html ? true : false,
+            'footer'        => $this->footer,
         ];
     }
 

@@ -63,7 +63,7 @@ class Datatables
      */
     public function column(\Closure $columns)
     {
-        $columns = $columns(new Column);
+        $columns = call_user_func($columns, new Column);
         if (is_array($columns)) {
             $this->columns = $columns;
             return $this;
