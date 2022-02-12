@@ -22,12 +22,25 @@ class Sorting
         }
 
         foreach ($columns as $column) {
-            if ($column->getAttribute() == $sortField and $column->isSortable()) {
-                if ($isReorder) {
-                    $queryBuilder->reorder($column->getWhereClauseAttribute(), $sortType);
-                } else {
-                    $queryBuilder->orderBy($column->getWhereClauseAttribute(), $sortType);
+            if ($column->getType('group')) {
+                foreach ($column->getChildren() as $child) {
+                    $queryBuilder = self::sorting($queryBuilder, $child, $sortField, $sortType, $isReorder);
                 }
+            } else {
+                $queryBuilder = self::sorting($queryBuilder, $column, $sortField, $sortType, $isReorder);
+            }
+        }
+
+        return $queryBuilder;
+    }
+
+    protected static function sorting($queryBuilder, $column, $sortField, $sortType, $isReorder)
+    {
+        if ($column->getAttribute() == $sortField and $column->isSortable()) {
+            if ($isReorder) {
+                $queryBuilder->reorder($column->getWhereClauseAttribute(), $sortType);
+            } else {
+                $queryBuilder->orderBy($column->getWhereClauseAttribute(), $sortType);
             }
         }
 

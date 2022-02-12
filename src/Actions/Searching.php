@@ -15,12 +15,23 @@ class Searching
 
         $queryBuilder->where(function ($query) use ($columns, $q) {
             foreach ($columns as $column) {
-                if ($column->isSearchable()) {
-                    $query->orWhere($column->getWhereClauseAttribute(), $column->getOperator(), "%{$q}%");
+                if ($column->getType('group')) {
+                    foreach ($column->getChildren() as $child) {
+                        self::searching($query, $child, $q);
+                    }
+                } else {
+                    self::searching($query, $column, $q);
                 }
             }
         });
 
         return $queryBuilder;
+    }
+
+    protected static function searching($queryBuilder, $column, $q)
+    {
+        if ($column->isSearchable()) {
+            $queryBuilder->orWhere($column->getWhereClauseAttribute(), $column->getOperator(), "%{$q}%");
+        }
     }
 }
