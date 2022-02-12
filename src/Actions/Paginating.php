@@ -9,8 +9,7 @@ class Paginating
     public static function create($query)
     {
         return [
-            'data' => $query
-                ->limit($perPage = Request::getPerPage())
+            'data' => $query->limit($perPage = Request::getPerPage())
                 ->offset($perPage * (Request::getPage() - 1))
                 ->get(),
             'total' => $query->count(),

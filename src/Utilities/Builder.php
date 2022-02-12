@@ -60,23 +60,22 @@ trait Builder
             return call_user_func($this->html, data_get($queryBuilder, $this->attribute), $queryBuilder);
         }
 
+        if ($this->getType('date')) {
+            return strftime($this->dateOutputFormat, strtotime($data));
+        }
+
         if ($this->getWith()) {
             if ($queryBuilder->{$this->getWith()} instanceof \Collection) {
                 $data = [];
                 foreach ($queryBuilder->{$this->getWith()} as $relation) {
                     $data[] = $relation->{$this->attribute};
                 }
+                return $data;
             } else {
-                $data = data_get($queryBuilder->{$this->getWith()}, $this->attribute);
+                return data_get($queryBuilder->{$this->getWith()}, $this->attribute);
             }
-        } else {
-            $data = data_get($queryBuilder, $this->attribute);
         }
 
-        if ($this->getType('date')) {
-            $data = strftime($this->dateOutputFormat, strtotime($data));
-        }
-
-        return $data;
+        return data_get($queryBuilder, $this->attribute);
     }
 }

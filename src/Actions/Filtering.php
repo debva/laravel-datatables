@@ -11,9 +11,9 @@ class Filtering
         $columnFilters = Request::getColumnFilters();
 
         foreach ($columns as $column) {
-            if ($column->isFilterable() and array_key_exists($column->getAttribute(), $columnFilters)) {
+            if ($column->isFilterable() and array_key_exists($column->getWhereClauseAttribute(), $columnFilters)) {
 
-                $filterValues = $columnFilters[$column->getAttribute()];
+                $filterValues = $columnFilters[$column->getWhereClauseAttribute()];
 
                 if (!is_array($filterValues)) {
                     $filterValues = [$filterValues];
