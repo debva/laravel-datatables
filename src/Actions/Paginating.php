@@ -1,8 +1,8 @@
 <?php
 
-namespace Debva\Actions;
+namespace Debva\LaravelDatatables\Actions;
 
-use Debva\Http\Request;
+use Debva\LaravelDatatables\Http\Request;
 
 class Paginating
 {

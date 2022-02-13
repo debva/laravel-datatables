@@ -1,8 +1,8 @@
 <?php
 
-namespace Debva\Tables;
+namespace Debva\LaravelDatatables\Tables;
 
-use Debva\Utilities\{
+use Debva\LaravelDatatables\Utilities\{
     Builder,
     Connection,
     Date,

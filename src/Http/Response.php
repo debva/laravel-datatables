@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Http;
+namespace Debva\LaravelDatatables\Http;
 
 class Response
 {

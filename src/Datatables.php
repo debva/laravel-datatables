@@ -1,12 +1,12 @@
 <?php
 
-namespace Debva;
+namespace Debva\LaravelDatatables;
 
-use Debva\Http\{Response};
-use Debva\Tables\{Column};
+use Debva\LaravelDatatables\Http\{Response};
+use Debva\LaravelDatatables\Tables\{Column};
 use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Debva\Actions\{Filtering, Paginating, Searching, Sorting};
+use Debva\LaravelDatatables\Actions\{Filtering, Paginating, Searching, Sorting};
 
 class Datatables
 {

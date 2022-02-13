@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Tables;
+namespace Debva\LaravelDatatables\Tables;
 
 class Row
 {

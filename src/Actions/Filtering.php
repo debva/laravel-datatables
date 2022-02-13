@@ -1,8 +1,8 @@
 <?php
 
-namespace Debva\Actions;
+namespace Debva\LaravelDatatables\Actions;
 
-use Debva\Http\Request;
+use Debva\LaravelDatatables\Http\Request;
 
 class Filtering
 {
@@ -36,7 +36,7 @@ class Filtering
 
             $queryBuilder = $queryBuilder->where(function ($query) use ($filterValues, $column) {
                 foreach ($filterValues as $value) {
-                    $attributeName = $column->getWhereClauseAttribute();
+                    $attributeName = $column->getWhereClause();
                     if ($column->getType() === 'date') {
                         $query->orWhereDate($attributeName, $value);
                     } else {

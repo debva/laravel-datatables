@@ -1,8 +1,8 @@
 <?php
 
-namespace Debva\Actions;
+namespace Debva\LaravelDatatables\Actions;
 
-use Debva\Http\Request;
+use Debva\LaravelDatatables\Http\Request;
 
 class Searching
 {
@@ -31,7 +31,7 @@ class Searching
     protected static function searching($queryBuilder, $column, $q)
     {
         if ($column->isSearchable()) {
-            $queryBuilder->orWhere($column->getWhereClauseAttribute(), $column->getOperator(), "%{$q}%");
+            $queryBuilder->orWhere($column->getWhereClause(), $column->getOperator(), "%{$q}%");
         }
     }
 }

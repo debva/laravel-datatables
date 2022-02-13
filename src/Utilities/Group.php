@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Utilities;
+namespace Debva\LaravelDatatables\Utilities;
 
 trait Group
 {

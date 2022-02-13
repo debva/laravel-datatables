@@ -8,7 +8,7 @@
             "src/helpers.php"
         ],
         "psr-4": {
-            "Debva\\": "src/"
+            "Debva\\LaravelDatatables\\": "src/"
         }
     },
     "authors": [

@@ -1,24 +1,24 @@
 <?php
 
-namespace Debva\Utilities;
+namespace Debva\LaravelDatatables\Utilities;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 trait Builder
 {
-    protected $whereClauseAttribute;
+    protected $whereClause;
 
     protected $with;
 
     /**
-     * @param string $whereClauseAttribute
+     * @param string $whereClause
      * 
      * @return $this
      */
-    public function whereClauseAttribute(string $whereClauseAttribute)
+    public function whereClause(string $whereClause)
     {
-        $this->whereClauseAttribute = $whereClauseAttribute;
+        $this->whereClause = $whereClause;
         return $this;
     }
 
@@ -36,9 +36,9 @@ trait Builder
     /**
      * @return string
      */
-    public function getWhereClauseAttribute(): string
+    public function getWhereClause(): string
     {
-        return $this->whereClauseAttribute ?? $this->attribute;
+        return $this->whereClause ?? $this->attribute;
     }
 
     /**
@@ -56,12 +56,14 @@ trait Builder
      */
     public function getData($queryBuilder)
     {
+        $value = data_get(($this->getWith() ? $queryBuilder->{$this->getWith()} : $queryBuilder), $this->attribute);
+
         if ($this->html) {
-            return call_user_func($this->html, data_get($queryBuilder, $this->attribute), $queryBuilder);
+            return call_user_func($this->html, $value, $queryBuilder);
         }
 
         if ($this->getType('date')) {
-            return strftime($this->dateOutputFormat, strtotime($data));
+            return strftime($this->dateOutputFormat, strtotime($value));
         }
 
         if ($this->getWith()) {
@@ -71,11 +73,10 @@ trait Builder
                     $data[] = $relation->{$this->attribute};
                 }
                 return $data;
-            } else {
-                return data_get($queryBuilder->{$this->getWith()}, $this->attribute);
             }
+            return $value;
         }
 
-        return data_get($queryBuilder, $this->attribute);
+        return $value;
     }
 }

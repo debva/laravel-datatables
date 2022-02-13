@@ -1,8 +1,8 @@
 <?php
 
-namespace Debva\Actions;
+namespace Debva\LaravelDatatables\Actions;
 
-use Debva\Http\Request;
+use Debva\LaravelDatatables\Http\Request;
 
 class Sorting
 {
@@ -38,9 +38,9 @@ class Sorting
     {
         if ($column->getAttribute() == $sortField and $column->isSortable()) {
             if ($isReorder) {
-                $queryBuilder->reorder($column->getWhereClauseAttribute(), $sortType);
+                $queryBuilder->reorder($column->getWhereClause(), $sortType);
             } else {
-                $queryBuilder->orderBy($column->getWhereClauseAttribute(), $sortType);
+                $queryBuilder->orderBy($column->getWhereClause(), $sortType);
             }
         }
 

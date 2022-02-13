@@ -1,6 +1,6 @@
 <?php
 
-namespace Debva\Utilities;
+namespace Debva\LaravelDatatables\Utilities;
 
 trait Serialize
 {
@@ -21,7 +21,7 @@ trait Serialize
     public function groupSerialize(?array $children = null): array
     {
         $result = $this->toBootstrapVue();
-        unset($result['key'], $result['filterable'], $result['searchable'], $result['sortable']);
+        unset($result['key'], $result['filterable'], $result['searchable'], $result['sortable'], $result['html'], $result['footer']);
         return array_merge($result, [
             'children' => $children,
         ]);
