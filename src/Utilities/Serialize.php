@@ -8,6 +8,7 @@ trait Serialize
     {
         return [
             'label'         => $this->name,
+            'placeholder'   => $this->placeholder,
             'key'           => $this->attribute,
             'type'          => $this->type,
             'filterable'    => $this->filterable,
@@ -20,11 +21,11 @@ trait Serialize
 
     public function groupSerialize(?array $children = null): array
     {
-        $result = $this->toBootstrapVue();
-        unset($result['key'], $result['filterable'], $result['searchable'], $result['sortable'], $result['html'], $result['footer']);
-        return array_merge($result, [
-            'children' => $children,
-        ]);
+        return [
+            'label'     => $this->name,
+            'type'      => $this->type,
+            'children'  => $children,
+        ];
     }
 
     public function textSerialize()

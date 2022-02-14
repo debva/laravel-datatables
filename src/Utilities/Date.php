@@ -4,16 +4,16 @@ namespace Debva\LaravelDatatables\Utilities;
 
 trait Date
 {
-    protected $dateOutputFormat = '%A, %d %B %Y %H:%m:%S';
+    protected $dateFormat = '%A, %d %B %Y %H:%m:%S';
 
     /**
      * @param string $format
      * 
      * @return $this
      */
-    public function dateOutputFormat(string $format)
+    public function dateFormat(string $format)
     {
-        $this->dateOutputFormat = $format;
+        $this->dateFormat = $format;
         return $this;
     }
 }

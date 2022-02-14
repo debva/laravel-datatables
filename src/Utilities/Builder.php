@@ -63,7 +63,10 @@ trait Builder
         }
 
         if ($this->getType('date')) {
-            return strftime($this->dateOutputFormat, strtotime($value));
+            if ($value) {
+                return strftime($this->dateFormat, strtotime($value));
+            }
+            return null;
         }
 
         if ($this->getWith()) {

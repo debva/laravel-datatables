@@ -3,36 +3,38 @@
 namespace Debva\LaravelDatatables\Tables;
 
 use Debva\LaravelDatatables\Utilities\{
+    Ability,
     Builder,
     Connection,
     Date,
-    Filterable,
     Footer,
     Group,
-    Searchable,
     Serialize,
-    Sortable
 };
 
 class Column
 {
-    use Builder,
+    use Ability,
+        Builder,
         Connection,
         Date,
-        Filterable,
         Footer,
         Group,
-        Searchable,
-        Serialize,
-        Sortable;
+        Serialize;
 
     protected $name;
 
     protected $attribute;
 
+    protected $placeholder;
+
     protected $type;
 
     protected $html;
+
+    protected $colspan = 1;
+
+    protected $rowspan = 1;
 
     protected $columnList = [];
 
@@ -77,6 +79,14 @@ class Column
     /**
      * @return string|null
      */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getAttribute()
     {
         return $this->attribute;
@@ -104,5 +114,44 @@ class Column
     {
         $this->html = $html;
         return $this;
+    }
+
+    /**
+     * @param string $colspan
+     * 
+     * @return $this
+     */
+    public function placeholder(string $placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
+    }
+
+    /**
+     * @param int $colspan
+     * 
+     * @return $this
+     */
+    public function span(int $colspan = 1, int $rowspan = 1)
+    {
+        $this->colspan = $colspan;
+        $this->rowspan = $rowspan;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getColspan(): int
+    {
+        return $this->colspan;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowspan(): int
+    {
+        return $this->rowspan;
     }
 }

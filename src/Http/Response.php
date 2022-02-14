@@ -6,11 +6,9 @@ class Response
 {
     public static function create($paginate, $cols)
     {
-        $columns = [];
-        foreach ($cols as $col) {
-            $childCols = self::nestedColumnGroup($col);
-            $columns[] = $col->{$col->getType() . 'Serialize'}($childCols);
-        }
+        $thead = self::nestedThead($cols);
+
+        $columns = self::nestedColumns($cols);
 
         $data = [];
         foreach ($paginate['data'] as $pdata) {
@@ -28,6 +26,7 @@ class Response
 
         return [
             'config' => [
+                'thead' => $thead,
                 'columns' => $columns
             ],
             'data' => [
@@ -38,22 +37,54 @@ class Response
         ];
     }
 
-    protected static function nestedColumnGroup($column)
+    protected static function nestedThead($columns, $level = 0)
     {
-        if ($children = $column->getChildren()) {
+        $level = $level;
+        $group = [];
+        $thead = [];
+        $wrap = [];
 
-            $columns = [];
-            foreach ($children as $child) {
-                if ($child->getType('group')) {
-                    $nestedColumn = self::nestedColumnGroup($child);
-                    $columns[] = $child->{$child->getType() . 'Serialize'}($nestedColumn);
-                } else {
-                    $columns[] = $child->{$child->getType() . 'Serialize'}();
-                }
+        foreach ($columns as $index => $column) {
+            if ($column->getType('group')) {
+                $group[] = $index;
+            }
+            $wrap[] = [
+                'label' => $column->getName(),
+                'colspan' => $column->getColspan(),
+                'rowspan' => $column->getRowspan(),
+            ];
+        }
+
+        $thead[] = $wrap;
+
+        if (count($group) > 0) {
+            $children = [];
+
+            foreach ($group as $index) {
+                $children = array_merge($children, $columns[$index]->getChildren());
+            }
+
+            if ($level == 0) {
+                $thead = array_merge($thead, self::nestedThead($children, $level++));
+            } else {
+                array_push($thead, self::nestedThead($children, $level++));
             }
         }
 
-        return $columns ?? null;
+        return $thead;
+    }
+
+    protected static function nestedColumns($cols)
+    {
+        $columns = [];
+        foreach ($cols as $col) {
+            if ($col->getType('group')) {
+                $columns = array_merge($columns, self::nestedColumns($col->getChildren()));
+            } else {
+                $columns[] = $col->{$col->getType() . 'Serialize'}();
+            }
+        }
+        return $columns;
     }
 
     protected static function nestedDataGroup($column, $pdata)
