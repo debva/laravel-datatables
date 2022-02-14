@@ -9,6 +9,7 @@ use Debva\LaravelDatatables\Utilities\{
     Date,
     Footer,
     Group,
+    Select,
     Serialize,
 };
 
@@ -20,6 +21,7 @@ class Column
         Date,
         Footer,
         Group,
+        Select,
         Serialize;
 
     protected $name;

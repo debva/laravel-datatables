@@ -33,6 +33,13 @@ trait Serialize
         return $this->toBootstrapVue();
     }
 
+    public function selectSerialize()
+    {
+        return array_merge($this->toBootstrapVue(), [
+            'options' => $this->options,
+        ]);
+    }
+
     public function dateSerialize()
     {
         $result = $this->toBootstrapVue();

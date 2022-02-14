@@ -4,14 +4,14 @@ namespace Debva\LaravelDatatables\Http;
 
 class Response
 {
-    public static function create($paginate, $cols)
+    public static function create($paginate, $total, $cols)
     {
         $thead = self::nestedThead($cols);
 
         $columns = self::nestedColumns($cols);
 
         $data = [];
-        foreach ($paginate['data'] as $pdata) {
+        foreach ($paginate as $pdata) {
             $values = [];
             foreach ($cols as $col) {
                 if ($col->getType('group')) {
@@ -32,7 +32,7 @@ class Response
             'data' => [
                 'data' => $data,
                 'perPage' => Request::getPerPage(),
-                'total' => $paginate['total'],
+                'total' => $total,
             ]
         ];
     }
@@ -49,7 +49,10 @@ class Response
                 $group[] = $index;
             }
             $wrap[] = [
+                'key' => $column->getAttribute(),
                 'label' => $column->getName(),
+                'type' => $column->getType(),
+                'sortable' => $column->isSortable(),
                 'colspan' => $column->getColspan(),
                 'rowspan' => $column->getRowspan(),
             ];

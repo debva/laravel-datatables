@@ -11,11 +11,11 @@ trait Ability
     protected $sortable = false;
 
     /**
-     * @param bool|null $filterable
+     * @param bool $filterable
      * 
      * @return $this
      */
-    public function ability(?bool $filterable = false, ?bool $searchable = false, ?bool $sortable = false)
+    public function ability(bool $filterable = false, bool $searchable = false, bool $sortable = false)
     {
         $this->filterable = $filterable;
         $this->searchable = $searchable;

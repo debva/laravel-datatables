@@ -79,10 +79,11 @@ class Datatables
     public function get(): array
     {
         $queryBuilder = $this->query;
+        $total = $queryBuilder->count();
         $queryBuilder = Filtering::create($queryBuilder, $this->columns);
         $queryBuilder = Searching::create($queryBuilder, $this->columns);
         $queryBuilder = Sorting::create($queryBuilder, $this->columns);
         $queryBuilder = Paginating::create($queryBuilder);
-        return Response::create($queryBuilder, $this->columns);
+        return Response::create($queryBuilder, $total, $this->columns);
     }
 }
