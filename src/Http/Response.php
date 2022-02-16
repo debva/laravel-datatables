@@ -18,7 +18,9 @@ class Response
                     $nestedData = self::nestedDataGroup($col, $pdata);
                     $values = array_merge($values, $nestedData);
                 } else {
-                    $values[$col->getAttribute()] = $col->getData($pdata);
+                    if (!$col->getType('blank')) {
+                        $values[$col->getAttribute()] = $col->getData($pdata);
+                    }
                 }
             }
             $data[] = $values;
@@ -100,7 +102,9 @@ class Response
                     $nestedData = self::nestedDataGroup($child, $pdata);
                     $data = array_merge($data, $nestedData);
                 } else {
-                    $data[$child->getAttribute()] = $child->getData($pdata);
+                    if (!$child->getType('blank')) {
+                        $data[$child->getAttribute()] = $child->getData($pdata);
+                    }
                 }
             }
         }
