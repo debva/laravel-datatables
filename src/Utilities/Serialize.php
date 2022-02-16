@@ -49,6 +49,9 @@ trait Serialize
 
     public function blankSerialize()
     {
-        return $this->name;
+        return [
+            'label' => $this->name,
+            'key' => $this->attribute,
+        ];
     }
 }
