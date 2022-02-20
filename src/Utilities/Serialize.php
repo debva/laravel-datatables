@@ -4,9 +4,9 @@ namespace Debva\LaravelDatatables\Utilities;
 
 trait Serialize
 {
-    protected function toBootstrapVue(): array
+    protected function toBootstrapVue(?array $children = null): array
     {
-        return [
+        $result = [
             'label'         => $this->name,
             'placeholder'   => $this->placeholder,
             'key'           => $this->attribute,
@@ -17,15 +17,38 @@ trait Serialize
             'html'          => $this->html ? true : false,
             'footer'        => $this->footer,
         ];
+
+        switch ($this->getType()) {
+            case 'blank':
+                return [
+                    'label' => $this->name,
+                    'key' => $this->attribute,
+                ];
+            case 'select':
+                return array_merge($result, [
+                    'options' => $this->options,
+                ]);
+            case 'date':
+                unset($result['searchable']);
+                return $result;
+            case 'group':
+                return [
+                    'label'     => $this->name,
+                    'type'      => $this->type,
+                    'children'  => $children,
+                ];
+        }
+
+        if (!is_null($this->getWhereHas())) {
+            $result['sortable'] = false;
+        }
+
+        return $result;
     }
 
-    public function groupSerialize(?array $children = null): array
+    public function groupSerialize(array $children): array
     {
-        return [
-            'label'     => $this->name,
-            'type'      => $this->type,
-            'children'  => $children,
-        ];
+        return $this->toBootstrapVue($children);
     }
 
     public function textSerialize()
@@ -35,23 +58,16 @@ trait Serialize
 
     public function selectSerialize()
     {
-        return array_merge($this->toBootstrapVue(), [
-            'options' => $this->options,
-        ]);
+        return $this->toBootstrapVue();
     }
 
     public function dateSerialize()
     {
-        $result = $this->toBootstrapVue();
-        unset($result['searchable']);
-        return $result;
+        return $this->toBootstrapVue();
     }
 
     public function blankSerialize()
     {
-        return [
-            'label' => $this->name,
-            'key' => $this->attribute,
-        ];
+        return $this->toBootstrapVue();
     }
 }

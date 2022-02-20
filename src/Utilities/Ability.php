@@ -36,6 +36,9 @@ trait Ability
      */
     public function isSearchable(): bool
     {
+        if ($this->getType('date')) {
+            return false;
+        }
         return $this->searchable;
     }
 
@@ -44,6 +47,9 @@ trait Ability
      */
     public function isSortable(): bool
     {
+        if ($this->getWhereHas()) {
+            return false;
+        }
         return $this->sortable;
     }
 }

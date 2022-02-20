@@ -13,16 +13,18 @@ class Searching
             return $queryBuilder;
         }
 
-        $queryBuilder->where(function ($query) use ($columns, $q) {
+        $queryBuilder = $queryBuilder->where(function ($query) use ($columns, $q) {
             foreach ($columns as $column) {
                 if ($column->getType('group')) {
                     foreach ($column->getChildren() as $child) {
-                        self::searching($query, $child, $q);
+                        $queryBuilder = self::searching($query, $child, $q);
                     }
                 } else {
-                    self::searching($query, $column, $q);
+                    $queryBuilder = self::searching($query, $column, $q);
                 }
             }
+
+            return $queryBuilder;
         });
 
         return $queryBuilder;
@@ -31,7 +33,15 @@ class Searching
     protected static function searching($queryBuilder, $column, $q)
     {
         if ($column->isSearchable()) {
-            $queryBuilder->orWhere($column->getWhereClause(), $column->getOperator(), "%{$q}%");
+            $attibuteName = ($column->getWhereClause() ?? $column->getAttribute());
+
+            if (!is_null($column->getWhereHas()) and !is_null($column->getWhereClause())) {
+                return $queryBuilder->orWhereHas($column->getWhereHas(), function ($query) use ($column, $q) {
+                    $query->where($column->getWhereClause(), $column->getOperator(), "%{$q}%");
+                });
+            } else {
+                return $queryBuilder->orWhere($attibuteName, $column->getOperator(), "%{$q}%");
+            }
         }
     }
 }

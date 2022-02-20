@@ -36,11 +36,12 @@ class Sorting
 
     protected static function sorting($queryBuilder, $column, $sortField, $sortType, $isReorder)
     {
-        if ($column->getAttribute() == $sortField and $column->isSortable()) {
+        if ($column->getAttribute() == $sortField and $column->isSortable() and is_null($column->getWhereHas())) {
+            $attibuteName = ($column->getWhereClause() ?? $column->getAttribute());
             if ($isReorder) {
-                $queryBuilder->reorder($column->getWhereClause(), $sortType);
+                $queryBuilder->reorder($attibuteName, $sortType);
             } else {
-                $queryBuilder->orderBy($column->getWhereClause(), $sortType);
+                $queryBuilder->orderBy($attibuteName, $sortType);
             }
         }
 

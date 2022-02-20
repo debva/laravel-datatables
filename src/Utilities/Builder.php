@@ -9,7 +9,7 @@ trait Builder
 {
     protected $whereClause;
 
-    protected $with;
+    protected $whereHas;
 
     /**
      * @param string $whereClause
@@ -23,30 +23,30 @@ trait Builder
     }
 
     /**
+     * @return string|null
+     */
+    public function getWhereClause()
+    {
+        return $this->whereClause;
+    }
+
+    /**
      * @param string $with
      * 
      * @return $this
      */
-    public function with(string $with)
+    public function whereHas(string $whereHas)
     {
-        $this->with = $with;
+        $this->whereHas = $whereHas;
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWhereClause(): string
-    {
-        return $this->whereClause ?? $this->attribute;
     }
 
     /**
      * @return string|null
      */
-    public function getWith()
+    public function getWhereHas()
     {
-        return $this->with;
+        return $this->whereHas;
     }
 
     /**
@@ -54,30 +54,21 @@ trait Builder
      * 
      * @return string|null
      */
-    public function getData($queryBuilder)
+    public function getData($queryBuilder, $attribute = null)
     {
-        $value = data_get(($this->getWith() ? $queryBuilder->{$this->getWith()} : $queryBuilder), $this->attribute);
+        $value = data_get($queryBuilder, $attribute ?? $this->attribute);
 
-        if ($this->html) {
-            return call_user_func($this->html, $value, $queryBuilder);
-        }
-
-        if ($this->getType('date')) {
-            if ($value) {
-                return strftime($this->dateFormat, strtotime($value));
+        if (is_null($attribute)) {
+            if ($this->html) {
+                return call_user_func($this->html, $value, $queryBuilder);
             }
-            return null;
-        }
 
-        if ($this->getWith()) {
-            if ($queryBuilder->{$this->getWith()} instanceof \Collection) {
-                $data = [];
-                foreach ($queryBuilder->{$this->getWith()} as $relation) {
-                    $data[] = $relation->{$this->attribute};
+            if ($this->getType('date')) {
+                if ($value) {
+                    return strftime($this->dateFormat, strtotime($value));
                 }
-                return $data;
+                return null;
             }
-            return $value;
         }
 
         return $value;

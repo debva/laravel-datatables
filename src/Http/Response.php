@@ -14,6 +14,16 @@ class Response
         foreach ($paginate as $pdata) {
             $values = [];
             foreach ($cols as $col) {
+                if ($col->getExtraData()) {
+                    if (is_array($col->getExtraData())) {
+                        foreach ($col->getExtraData() as $extraData) {
+                            $values[$extraData] = $col->getData($pdata, $extraData);
+                        }
+                    } else {
+                        $values[$col->getExtraData()] = $col->getData($pdata, $col->getExtraData());
+                    }
+                }
+
                 if ($col->getType('group')) {
                     $nestedData = self::nestedDataGroup($col, $pdata);
                     $values = array_merge($values, $nestedData);

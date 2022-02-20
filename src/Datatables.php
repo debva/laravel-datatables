@@ -23,13 +23,14 @@ class Datatables
     /**
      * @param \Closure|Model|Builder|QueryBuilder|string $query
      * 
-     * @return $query
+     * @return self
      */
-    public static function query($query)
+    public static function query($query): self
     {
         if ($query instanceof \Closure) {
             return (new self)->newQuery($query());
         }
+
         return (new self)->newQuery($query);
     }
 
@@ -38,7 +39,7 @@ class Datatables
      * 
      * @return $this
      */
-    protected function newQuery($query)
+    protected function newQuery($query): self
     {
         if (is_string($query) and class_exists($query)) {
             $query = new $query;
@@ -61,29 +62,33 @@ class Datatables
      * 
      * @return $this
      */
-    public function column(\Closure $columns)
+    public function column(\Closure $columns): self
     {
         $columns = call_user_func($columns, new Column);
+
         if (is_array($columns)) {
             $this->columns = $columns;
             return $this;
         }
+
         throw new \Exception('Columns must be an array');
     }
 
     /**
-     * @param string|null $tableType
-     * 
      * @return array
      */
     public function get(): array
     {
-        $queryBuilder = $this->query;
-        $total = $queryBuilder->count();
-        $queryBuilder = Filtering::create($queryBuilder, $this->columns);
-        $queryBuilder = Searching::create($queryBuilder, $this->columns);
-        $queryBuilder = Sorting::create($queryBuilder, $this->columns);
-        $queryBuilder = Paginating::create($queryBuilder);
-        return Response::create($queryBuilder, $total, $this->columns);
+        if (!empty($this->columns)) {
+            $queryBuilder = $this->query;
+            $total = $queryBuilder->count();
+            $queryBuilder = Filtering::create($queryBuilder, $this->columns);
+            $queryBuilder = Searching::create($queryBuilder, $this->columns);
+            $queryBuilder = Sorting::create($queryBuilder, $this->columns);
+            $queryBuilder = Paginating::create($queryBuilder);
+            return Response::create($queryBuilder, $total, $this->columns);
+        }
+
+        throw new \Exception('Columns must be defined');
     }
 }

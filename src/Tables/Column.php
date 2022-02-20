@@ -34,6 +34,8 @@ class Column
 
     protected $html;
 
+    protected $extraData;
+
     protected $colspan = 1;
 
     protected $rowspan = 1;
@@ -64,7 +66,7 @@ class Column
      * 
      * @return $this
      */
-    protected function create(string $type, string $name, $attribute = null)
+    protected function create(string $type, string $name, $attribute = null): self
     {
         $this->type = $type;
         $this->name = $name;
@@ -112,7 +114,7 @@ class Column
      * 
      * @return $this
      */
-    public function html(\Closure $html)
+    public function html(\Closure $html): self
     {
         $this->html = $html;
         return $this;
@@ -123,10 +125,29 @@ class Column
      * 
      * @return $this
      */
-    public function placeholder(string $placeholder)
+    public function placeholder(string $placeholder): self
     {
         $this->placeholder = $placeholder;
         return $this;
+    }
+
+    /**
+     * @param string|array $extraData
+     * 
+     * @return $this
+     */
+    public function withExtraData($extraData): self
+    {
+        $this->extraData = $extraData;
+        return $this;
+    }
+
+    /**
+     * @return string|array|null
+     */
+    public function getExtraData()
+    {
+        return $this->extraData;
     }
 
     /**
@@ -134,7 +155,7 @@ class Column
      * 
      * @return $this
      */
-    public function span(int $colspan = 1, int $rowspan = 1)
+    public function span(int $colspan = 1, int $rowspan = 1): self
     {
         $this->colspan = $colspan;
         $this->rowspan = $rowspan;

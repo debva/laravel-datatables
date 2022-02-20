@@ -34,16 +34,24 @@ class Filtering
                 $filterValues = [$filterValues];
             }
 
-            $queryBuilder = $queryBuilder->where(function ($query) use ($filterValues, $column) {
-                foreach ($filterValues as $value) {
-                    $attributeName = $column->getWhereClause();
-                    if ($column->getType() === 'date') {
-                        $query->orWhereDate($attributeName, $value);
-                    } else {
-                        $query->orWhere($attributeName, $column->getOperator(), "%$value%");
+            if (!is_null($column->getWhereHas()) and !is_null($column->getWhereClause())) {
+                $queryBuilder = $queryBuilder->whereHas($column->getWhereHas(), function ($query) use ($column, $filterValues) {
+                    foreach ($filterValues as $value) {
+                        $query->where($column->getWhereClause(), $column->getOperator(), "%$value%");
                     }
-                }
-            });
+                });
+            } else if (is_null($column->getWhereHas())) {
+                $queryBuilder = $queryBuilder->where(function ($query) use ($filterValues, $column) {
+                    foreach ($filterValues as $value) {
+                        $attributeName = ($column->getWhereClause() ?? $column->getAttribute());
+                        if ($column->getType() === 'date') {
+                            $query->orWhereDate($attributeName, $value);
+                        } else {
+                            $query->orWhere($attributeName, $column->getOperator(), "%$value%");
+                        }
+                    }
+                });
+            }
         }
 
         return $queryBuilder;
