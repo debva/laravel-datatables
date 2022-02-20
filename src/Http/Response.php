@@ -108,6 +108,16 @@ class Response
 
             $data = [];
             foreach ($children as $child) {
+                if ($child->getExtraData()) {
+                    if (is_array($child->getExtraData())) {
+                        foreach ($child->getExtraData() as $extraData) {
+                            $data[$extraData] = $child->getData($pdata, $extraData);
+                        }
+                    } else {
+                        $data[$child->getExtraData()] = $child->getData($pdata, $child->getExtraData());
+                    }
+                }
+
                 if ($child->getType('group')) {
                     $nestedData = self::nestedDataGroup($child, $pdata);
                     $data = array_merge($data, $nestedData);
