@@ -29,7 +29,7 @@ trait Serialize
                     'options' => $this->options,
                 ]);
             case 'date':
-                unset($result['searchable']);
+                $result['searchable'] = false;
                 return $result;
             case 'group':
                 return [
