@@ -34,8 +34,6 @@ class Column
 
     protected $html;
 
-    protected $extraData;
-
     protected $colspan = 1;
 
     protected $rowspan = 1;
@@ -129,25 +127,6 @@ class Column
     {
         $this->placeholder = $placeholder;
         return $this;
-    }
-
-    /**
-     * @param string|array $extraData
-     * 
-     * @return $this
-     */
-    public function withExtraData($extraData): self
-    {
-        $this->extraData = $extraData;
-        return $this;
-    }
-
-    /**
-     * @return string|array|null
-     */
-    public function getExtraData()
-    {
-        return $this->extraData;
     }
 
     /**

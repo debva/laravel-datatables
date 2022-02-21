@@ -7,9 +7,30 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 trait Builder
 {
+    protected $extraData;
+
     protected $whereClause;
 
     protected $whereHas;
+
+    /**
+     * @param string|array $extraData
+     * 
+     * @return $this
+     */
+    public function withExtraData($extraData): self
+    {
+        $this->extraData = $extraData;
+        return $this;
+    }
+
+    /**
+     * @return string|array|null
+     */
+    public function getExtraData()
+    {
+        return $this->extraData;
+    }
 
     /**
      * @param string $whereClause
@@ -35,9 +56,10 @@ trait Builder
      * 
      * @return $this
      */
-    public function whereHas(string $whereHas)
+    public function whereHas(string $whereHas, string $whereClause)
     {
         $this->whereHas = $whereHas;
+        $this->whereClause = $whereClause;
         return $this;
     }
 

@@ -44,7 +44,7 @@ class Filtering
                 $queryBuilder = $queryBuilder->where(function ($query) use ($filterValues, $column) {
                     foreach ($filterValues as $value) {
                         $attributeName = ($column->getWhereClause() ?? $column->getAttribute());
-                        if ($column->getType() === 'date') {
+                        if ($column->getType('date')) {
                             $query->orWhereDate($attributeName, $value);
                         } else {
                             $query->orWhere($attributeName, $column->getOperator(), "%$value%");
