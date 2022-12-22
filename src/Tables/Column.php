@@ -42,7 +42,7 @@ class Column
 
     public function __construct()
     {
-        $this->columnList = ['blank', 'text', 'select', 'date', 'group'];
+        $this->columnList = ['blank', 'text', 'select', 'date', 'group', 'daterange'];
     }
 
     public function __call($method, $arguments)

@@ -85,7 +85,7 @@ trait Builder
                 return call_user_func($this->html, $value, $queryBuilder);
             }
 
-            if ($this->getType('date')) {
+            if ($this->getType('date') || $this->getType('daterange')) {
                 if ($value) {
                     return strftime($this->dateFormat, strtotime($value));
                 }

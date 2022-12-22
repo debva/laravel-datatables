@@ -42,12 +42,22 @@ class Filtering
                 });
             } else if (is_null($column->getWhereHas())) {
                 $queryBuilder = $queryBuilder->where(function ($query) use ($filterValues, $column) {
-                    foreach ($filterValues as $value) {
-                        $attributeName = ($column->getWhereClause() ?? $column->getAttribute());
-                        if ($column->getType('date')) {
-                            $query->orWhereDate($attributeName, $value);
+                    $attributeName = ($column->getWhereClause() ?? $column->getAttribute()); 
+                    if($column->getType('daterange')) {
+                        if(str_contains($filterValues[0], ','))
+                            $filterValues = explode(',', $filterValues[0]); 
+                        if(count($filterValues) == 1) {
+                            $query->orWhereDate($attributeName, $filterValues[0]);
                         } else {
-                            $query->orWhere($attributeName, $column->getOperator(), "%$value%");
+                            $query->orWhereBetween($attributeName, [$filterValues[0], $filterValues[1]]);  
+                        }
+                    } else {
+                        foreach ($filterValues as $value) {
+                            if ($column->getType('date')) {
+                                $query->orWhereDate($attributeName, $value);
+                            } else {
+                                $query->orWhere($attributeName, $column->getOperator(), "%$value%");
+                            }
                         }
                     }
                 });

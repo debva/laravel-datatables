@@ -66,6 +66,11 @@ trait Serialize
         return $this->toBootstrapVue();
     }
 
+    public function daterangeSerialize()
+    {
+        return $this->toBootstrapVue();
+    }
+
     public function blankSerialize()
     {
         return $this->toBootstrapVue();
